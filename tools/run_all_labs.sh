@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 執行全部驗證:Python 版 19 章 notebook、韌體 host PID 測試、C++ 版 19 章。
+# 執行全部驗證:Jupyter 19 章 notebook、純 Python 腳本 19 章、韌體 host PID 測試、C++ 19 章。
 # 任一項失敗即回報非零結束碼。
 #
 # 環境變數(皆可覆寫):
@@ -14,8 +14,11 @@ export CXX
 
 fail=0
 
-echo "---- Python 版 19 章(python/)----"
-./python/run_all.sh || fail=1
+echo "---- Jupyter notebook 19 章(jupyter/)----"
+./jupyter/run_all.sh || fail=1
+
+echo "---- 純 Python 腳本 19 章(python/)----"
+PYTHON="$PYTHON" ./python/run_all.sh || fail=1
 
 echo "---- host firmware PID test ----"
 if command -v "$CXX" >/dev/null; then
