@@ -42,7 +42,7 @@ jupyter lab jupyter/                                 # 開任一章的 lab.ipynb
 
 # 命令列 / CI:純 Python 腳本版
 pip install -r python/requirements.txt
-cd python/03-tuning && python main.py                # 單跑一章
+python python/03-tuning/main.py                      # 單跑一章(可從任意目錄)
 
 # C++ 版(只需 C++17 編譯器,CMake 選用)
 ./cpp/run_all.sh
