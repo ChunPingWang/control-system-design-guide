@@ -31,6 +31,13 @@ jupyter lab python/                                 # 開任一章的 lab.ipynb
 ./tools/run_all_labs.sh
 ```
 
+> 若系統的 C++ 編譯器不叫 `c++`(例如只有 `g++-15`),用 `CXX` 指定即可;
+> `PYTHON` 亦可覆寫(預設用 repo 根目錄的 `.venv`):
+>
+> ```bash
+> CXX=g++-15 ./tools/run_all_labs.sh
+> ```
+
 ## 目錄結構
 
 ```
