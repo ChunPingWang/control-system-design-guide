@@ -14,8 +14,8 @@ for d in [01][0-9]-*/; do
     d="${d%/}"
     [ -f "$d/main.py" ] || continue
     printf '%-32s ' "$d"
-    # 從章目錄內執行,讓腳本裡的 sys.path.append('..') 指到 python/,找得到 common/
-    if ( cd "$d" && "$PYTHON" main.py ) >"$LOGDIR/pyscript_$d.log" 2>&1; then
+    # 腳本以 __file__ 自行定位 common/,從任意目錄執行皆可;這裡直接跑
+    if "$PYTHON" "$d/main.py" >"$LOGDIR/pyscript_$d.log" 2>&1; then
         echo "OK"
     else
         echo "FAIL  (log: $LOGDIR/pyscript_$d.log)"

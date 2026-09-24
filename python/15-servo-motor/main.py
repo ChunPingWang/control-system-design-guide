@@ -18,7 +18,7 @@
 
 
 import sys, pathlib
-sys.path.append(str(pathlib.Path('..').resolve()))
+sys.path.append(str(pathlib.Path(__file__).resolve().parent.parent))  # 讓腳本可從任意目錄執行
 import numpy as np
 import matplotlib.pyplot as plt
 import control as ct

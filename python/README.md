@@ -17,8 +17,8 @@ python -m venv .venv                # Python ≥ 3.11
 source .venv/bin/activate
 pip install -r python/requirements.txt
 
-# 單跑一章(從章目錄內執行,腳本會以 ../ 載入 common/)
-cd python/03-tuning && python main.py
+# 單跑一章(可從任意目錄執行;腳本以 __file__ 定位 common/)
+python python/03-tuning/main.py
 ```
 
 一鍵重跑全部 19 章(任一章 assertion 失敗即以非零結束碼回報):
@@ -46,7 +46,7 @@ python/
 └── run_all.sh
 ```
 
-每支 `main.py` 以 `sys.path.append(str(pathlib.Path('..').resolve()))` 載入 `python/common/`,
-故請**從該章目錄內**執行(`run_all.sh` 已代為 `cd`)。
+每支 `main.py` 以 `pathlib.Path(__file__).resolve().parent.parent` 定位並載入 `python/common/`,
+因此**從任意工作目錄**執行皆可(不必先 `cd` 進章目錄)。
 
 每章結構:理論重點(註解)→ 實驗(印數值表 + 畫圖)→ **✅ 驗證(assertion)** → 練習。
