@@ -5,7 +5,7 @@
 | 原書 | George Ellis, *Control System Design Guide: Using Your Computer to Understand and Diagnose Feedback Controllers*, 4th ed. (2012) |
 | 文件版本 | v2(2026-09-24) |
 | 狀態 | **已實作並完成程式碼驗證** —— 19 章 Jupyter 實驗全數可執行,每章附自動化驗證(assertion) |
-| 實作位置 | repo 根目錄(`01-…`~`19-…` 各章、`common/`、`hardware/`) |
+| 實作位置 | repo 根目錄(`01-…`~`19-…` 各章、`common/`、`hardware/`);C/C++ 版在 `cpp/` |
 | 前版計劃 | `control-system-design-guide-software-replacement-plan-v1.md`(規劃草案,本文件取代之) |
 
 ---
@@ -18,6 +18,8 @@
 - **每章一份 Jupyter notebook**(`NN-主題/lab.ipynb`),含:理論重點、可執行實驗、
   **✅ 驗證 cell**(以 assertion 鎖住關鍵數值)、章末練習。
 - **共用函式庫 `common/`**(「ModelQ-lite」):逐樣本模擬器 + DSA + 解析工具。
+- **C/C++ 平行版本**(`cpp/`):19 章各一支 C++17 程式,header-only 函式庫、零外部相依,
+  實驗與驗證條件與 notebook 一一對應(見 `cpp/README.md`)。
 - **ESP32 韌體**(`hardware/esp32/`):第 19 章 RCP 實機平台,PID 邏輯已在 host 端
   與 Python 實作逐樣本比對驗證。
 
@@ -111,6 +113,7 @@ LTI(python-control)用於解析 Bode/邊限,與逐樣本模擬**交叉驗證**(�
 | 19 份 notebook 全量執行 | **19/19 通過**(`jupyter nbconvert --to notebook --execute`) |
 | 每章 assertion | 全數通過(各章「✅ 驗證通過」輸出保留在 notebook 內) |
 | 韌體 host 測試 | 通過(`hardware/esp32/test_host/`) |
+| C++ 版 19 章(`cpp/`) | **19/19 通過**(g++ 13 / clang++,`cpp/run_all.sh`);確定性章節數值與 notebook 逐位相同 |
 | `main.cpp`(Arduino 層) | 未編譯 —— 需 PlatformIO + ESP32 toolchain;控制邏輯(pid.h)已 host 驗證 |
 
 重跑全部驗證:
@@ -119,6 +122,7 @@ LTI(python-control)用於解析 Bode/邊限,與逐樣本模擬**交叉驗證**(�
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ./tools/run_all_labs.sh          # 執行 19 份 notebook(任一 assert 失敗即中止)
+./cpp/run_all.sh                 # C++ 版 19 章(只需 C++17 編譯器)
 ```
 
 ## 6. 與原書的已知差異

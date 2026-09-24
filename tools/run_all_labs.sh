@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 執行全部 19 章 lab notebook;任一章的 ✅ 驗證 assertion 失敗即中止並回報。
+# 執行全部 19 章 lab notebook 與 C++ 版;任一章的 ✅ 驗證 assertion 失敗即中止並回報。
 set -u
 cd "$(dirname "$0")/.."
 JUPYTER="${JUPYTER:-.venv/bin/jupyter}"
@@ -25,6 +25,13 @@ if command -v c++ >/dev/null; then
       && "${PYTHON:-../../../.venv/bin/python}" check_pid.py /tmp/pid_c_output.csv ) || fail=1
 else
     echo "c++ 不存在,略過韌體 host 測試"
+fi
+
+echo "---- C++ 版 19 章(cpp/)----"
+if command -v c++ >/dev/null; then
+    ./cpp/run_all.sh >/tmp/cpp_labs.log 2>&1 && echo "OK" || { echo "FAIL  (log: /tmp/cpp_labs.log)"; fail=1; }
+else
+    echo "c++ 不存在,略過 C++ 版"
 fi
 
 exit $fail

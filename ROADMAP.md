@@ -9,6 +9,7 @@
 - [x] M6 RCP 軟體側:辨識 → λ-tuning → 模擬驗證 → 韌體等價性(Ch19)
 - [x] 韌體:pid.h + main.cpp(編碼器 ISR、TB6612、序列協定)+ host 端等價測試
 - [x] 全量驗證:19/19 notebook 通過(tools/run_all_labs.sh)
+- [x] C/C++ 版本:`cpp/` 19 章 C++17 程式 + header-only 函式庫,19/19 驗證通過(cpp/run_all.sh)
 
 ## 硬體階段(待硬體到位)
 - [ ] H1 編碼器讀取與標定(counts/rev 實測)
@@ -20,4 +21,4 @@
 
 ## 選配
 - [ ] ipywidgets 滑桿互動調參(Live Constant 體驗)
-- [ ] CI:GitHub Actions 跑 run_all_labs.sh 回歸
+- [ ] CI:GitHub Actions 跑 run_all_labs.sh 與 cpp/run_all.sh 回歸
