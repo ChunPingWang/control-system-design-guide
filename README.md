@@ -1,62 +1,58 @@
 # Control System Design Guide — Python / C++ 實驗教材
 
 George Ellis《Control System Design Guide》(4th ed.) 的現代化開源實驗環境:
-以 **Python + Jupyter + python-control + SciPy** 取代原書的 Visual ModelQ,
-以 **ESP32** 取代商用 RCP 硬體。19 章、每章一份可執行、可驗證的 lab notebook。
+以開源軟體取代原書的 Visual ModelQ,以 **ESP32** 取代商用 RCP 硬體。
+全書 19 章,提供 **Python 與 C/C++ 兩個對稱版本**,章節目錄一一對應、
+實驗參數與 ✅ 驗證條件相同。
 
-另有 **C/C++ 版本**,獨立放在 [`cpp/`](cpp/README.md):19 章各一支 C++17 程式,
-零外部相依、與 notebook 相同的實驗與 ✅ 驗證條件,適合嵌入式 / 韌體背景的讀者。
-
-| 版本 | 路徑 | 執行 |
-|---|---|---|
-| Python(Jupyter) | `01-…`~`19-…/lab.ipynb`、`common/` | `jupyter lab` |
-| C/C++(C++17) | `cpp/01-…`~`cpp/19-…/main.cpp`、`cpp/common/` | `cpp/run_all.sh` |
+| 版本 | 路徑 | 技術 | 執行 | 說明 |
+|---|---|---|---|---|
+| Python | [`python/`](python/README.md) | Jupyter + python-control + SciPy | `python/run_all.sh` | 每章一份 `lab.ipynb`,圖表內嵌,適合互動學習 |
+| C/C++ | [`cpp/`](cpp/README.md) | C++17,header-only,零外部相依 | `cpp/run_all.sh` | 每章一支 `main.cpp`,輸出 CSV,貼近嵌入式 / 韌體 |
 
 > 總覽、章節對照與驗證報告見
 > [`control-system-design-guide-study-guide-v2.md`](control-system-design-guide-study-guide-v2.md)。
 
-## 安裝與執行
+## 快速開始
 
 ```bash
-python -m venv .venv                # 建議 Python 3.11/3.12
-source .venv/bin/activate
-pip install -r requirements.txt
-jupyter lab                         # 開任一章的 lab.ipynb
+# Python 版
+python -m venv .venv && source .venv/bin/activate   # 建議 Python 3.11/3.12
+pip install -r python/requirements.txt
+jupyter lab python/                                 # 開任一章的 lab.ipynb
+
+# C++ 版(只需 C++17 編譯器,CMake 選用)
+./cpp/run_all.sh
 ```
 
-一鍵重跑全部驗證(19 份 notebook,任一章 assertion 失敗即報錯):
+一鍵重跑全部驗證(Python 19 章 + 韌體 host 測試 + C++ 19 章,任一失敗即回報):
 
 ```bash
 ./tools/run_all_labs.sh
 ```
 
-C++ 版(只需 C++17 編譯器,CMake 選用):
-
-```bash
-./cpp/run_all.sh                    # 建置 + 執行 19 章 C++ lab(ctest)
-```
-
 ## 目錄結構
 
 ```
-common/                  ModelQ-lite 共用函式庫
-├── control_helpers.py     解析工具:plants、PID、margins、step metrics
-├── sim.py                 逐樣本模擬:DiscretePID、MotorPlant、DCMotorPlant、
-│                          TwoMassPlant、Backlash、EncoderModel、Delay…
-├── dsa.py                 DSA:chirp/PRBS 激發 + Welch 交叉頻譜 FRF 量測
-└── plots.py               Bode 疊圖(解析系統與量測 FRF 同圖)
+python/                  Python 版
+├── common/                ModelQ-lite 共用函式庫(control_helpers / sim / dsa / plots)
+├── 01-introduction/ … 19-rapid-control-prototyping/   每章一份 lab.ipynb
+├── requirements.txt
+└── run_all.sh             執行 19 份 notebook 驗證
 
-01-introduction/  …  19-rapid-control-prototyping/    每章一份 lab.ipynb
-
-cpp/                     C/C++ 版(與上面 Python 版分路徑存放,章節一一對應)
-├── common/                header-only 函式庫:lti / sim / dsa / linalg / util
+cpp/                     C/C++ 版(與 python/ 對稱)
+├── common/                header-only 函式庫(lti / sim / dsa / linalg / util)
 ├── 01-introduction/ … 19-rapid-control-prototyping/   每章一支 main.cpp
-└── tools/plot_csv.py      CSV → 圖(選用)
+├── tools/plot_csv.py      CSV → 圖(選用)
+├── CMakeLists.txt
+└── run_all.sh             建置 + 執行 19 章驗證
 
-hardware/esp32/          第 19 章 RCP 韌體(PlatformIO)
+hardware/esp32/          第 19 章 RCP 韌體(PlatformIO,兩版共用)
 ├── src/pid.h              PID 邏輯(純 C++,host 可測)
-├── src/main.cpp            編碼器 ISR、TB6612 PWM、序列命令與遙測
-└── test_host/              host 端 C/Python 逐樣本等價性測試
+├── src/main.cpp           編碼器 ISR、TB6612 PWM、序列命令與遙測
+└── test_host/             host 端 C/Python 逐樣本等價性測試
+
+tools/run_all_labs.sh    全部驗證(兩版 + 韌體)
 ```
 
 ## 章節一覽
@@ -74,7 +70,7 @@ hardware/esp32/          第 19 章 RCP 韌體(PlatformIO)
 | 09 | 迴路內濾波器 | 19 | RCP(ESP32) |
 | 10 | Luenberger 觀測器 | | |
 
-每章結構:理論重點 → 實驗(圖 + 數值表)→ **✅ 驗證 cell(assertion)** → 練習。
-C++ 版每章:實驗(數值表 + CSV)→ **✅ 驗證(CHECK)** → 以結束碼回報。
+- Python 版每章:理論重點 → 實驗(圖 + 數值表)→ **✅ 驗證 cell(assertion)** → 練習。
+- C++ 版每章:實驗(數值表 + CSV)→ **✅ 驗證(CHECK)** → 以結束碼回報。
 
 本教材為原創內容,不含原書文字、圖表或 ModelQ 專有檔案;請搭配原書使用。

@@ -1,6 +1,6 @@
 # Control System Design Guide — C/C++ 實驗教材
 
-Python 版([`../`](../README.md) 各章 `lab.ipynb`)的 **C++17 平行版本**:
+Python 版([`../python/`](../python/README.md) 各章 `lab.ipynb`)的 **C++17 平行版本**:
 19 章各一支可執行程式,重現相同實驗、輸出相同數值表,並以相同的 **✅ 驗證條件** 自我檢查。
 
 - **零外部相依**:只用 C++17 標準函式庫(header-only 共用函式庫 `common/`),
@@ -51,9 +51,9 @@ cpp/
 │   │                         時域響應、Padé、Ackermann 極點配置   ← python-control
 │   ├── sim.hpp               DiscretePID、MotorPlant、DCMotorPlant、TwoMassPlant、
 │   │                         Backlash、EncoderModel、Delay、OnePole、Biquad、iirnotch
-│   │                                                                ← common/sim.py
-│   ├── dsa.hpp               FFT、chirp/PRBS、Welch 交叉頻譜 FRF    ← common/dsa.py
-│   └── util.hpp              陣列、統計、step_metrics、CSV、Checker ← control_helpers.py
+│   │                                                                ← python/common/sim.py
+│   ├── dsa.hpp               FFT、chirp/PRBS、Welch 交叉頻譜 FRF    ← python/common/dsa.py
+│   └── util.hpp              陣列、統計、step_metrics、CSV、Checker ← python/common/control_helpers.py
 ├── 01-introduction/main.cpp  …  19-rapid-control-prototyping/main.cpp
 ├── tools/plot_csv.py       CSV → 圖(選用)
 ├── CMakeLists.txt          每章一個執行檔 ch01…ch19,並註冊為 ctest
