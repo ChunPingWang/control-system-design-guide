@@ -13,11 +13,23 @@ George Ellis《Control System Design Guide》(4th ed.) 的現代化開源實驗�
 > 總覽、章節對照與驗證報告見
 > [`control-system-design-guide-study-guide-v2.md`](control-system-design-guide-study-guide-v2.md)。
 
+## 環境需求
+
+| 用途 | 需求 | 備註 |
+|---|---|---|
+| Python 版 | Python ≥ 3.11 + `python/requirements.txt` 套件 | 已於 3.11–3.14 驗證;套件見 [`python/requirements.txt`](python/requirements.txt) |
+| C/C++ 版 | 任一 C++17 編譯器(g++ / clang++ / MSVC) | header-only,無 Eigen / Boost / FFTW 等外部相依 |
+| C++ 一鍵驗證 | CMake ≥ 3.16(選用) | 無 CMake 時 `cpp/run_all.sh` 會退回直接以 `$CXX` 編譯 |
+| 第 19 章韌體 | PlatformIO + ESP32(選用) | host 端 PID 等價性測試只需 C++ 編譯器,不需實機 |
+
+> Python 與 C++ 兩版彼此獨立,任選一版即可;只想跑 C++ 版時不需要安裝任何 Python 套件
+> (畫圖用的 `tools/plot_csv.py` 除外)。
+
 ## 快速開始
 
 ```bash
 # Python 版
-python -m venv .venv && source .venv/bin/activate   # 建議 Python 3.11/3.12
+python -m venv .venv && source .venv/bin/activate   # Python ≥ 3.11(已於 3.11–3.14 驗證)
 pip install -r python/requirements.txt
 jupyter lab python/                                 # 開任一章的 lab.ipynb
 
@@ -37,6 +49,20 @@ jupyter lab python/                                 # 開任一章的 lab.ipynb
 > ```bash
 > CXX=g++-15 ./tools/run_all_labs.sh
 > ```
+
+驗證涵蓋 **39 個程式單元**:19 章 Python notebook(nbconvert 執行章末 ✅ assertion)、
+19 章 C++(ctest,`-Wall -Wextra` 零警告)、以及 1 個韌體 host PID 等價性測試
+(`pid.h` 對比 Python 重現,逐樣本最大差異約 3e-5)。任一失敗腳本即以非零結束碼回報。
+
+## 疑難排解
+
+- **`command not found: c++` 或略過 C++ / 韌體驗證** — 系統沒有名為 `c++` 的編譯器。
+  用 `CXX=g++-15`(或你的編譯器名)覆寫,見上方範例。
+- **`ModuleNotFoundError`(numpy / control 等)** — 未啟用 venv 或未裝套件;
+  重跑 `python -m venv .venv && source .venv/bin/activate && pip install -r python/requirements.txt`。
+- **`jupyter: command not found`** — `run_all.sh` 預設找 `.venv/bin/jupyter`,
+  找不到才退回 PATH 上的 `jupyter`;確認已在 venv 內安裝(requirements 含 `jupyterlab`)。
+- **CMake 快取指向舊編譯器** — 刪掉 `cpp/build/` 重新設定,或改用 `CXX` 直接編譯路徑。
 
 ## 目錄結構
 
