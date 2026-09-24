@@ -5,7 +5,7 @@
 | 原書 | George Ellis, *Control System Design Guide: Using Your Computer to Understand and Diagnose Feedback Controllers*, 4th ed. (2012) |
 | 文件版本 | v2(2026-09-24) |
 | 狀態 | **已實作並完成程式碼驗證** —— 19 章 Jupyter 實驗全數可執行,每章附自動化驗證(assertion) |
-| 實作位置 | Python 版 `python/`(`01-…`~`19-…` 各章、`common/`);C/C++ 版 `cpp/`(對稱結構);韌體 `hardware/` |
+| 實作位置 | Jupyter 版 `jupyter/`(`01-…`~`19-…` 各章 `lab.ipynb`、`common/`);純 Python 腳本版 `python/`(各章 `main.py`,同源);C/C++ 版 `cpp/`(對稱結構);韌體 `hardware/` |
 | 前版計劃 | `control-system-design-guide-software-replacement-plan-v1.md`(規劃草案,本文件取代之) |
 
 ---
@@ -15,9 +15,11 @@
 原書所有實驗依賴作者的 **Visual ModelQ**(僅限 Windows、已停止維護、專有格式)。
 本教材以開源工具重建全書 19 章的實驗環境:
 
-- **每章一份 Jupyter notebook**(`python/NN-主題/lab.ipynb`),含:理論重點、可執行實驗、
-  **✅ 驗證 cell**(以 assertion 鎖住關鍵數值)、章末練習。
-- **共用函式庫 `python/common/`**(「ModelQ-lite」):逐樣本模擬器 + DSA + 解析工具。
+- **每章一份 Jupyter notebook**(`jupyter/NN-主題/lab.ipynb`),含:理論重點、可執行實驗、
+  **✅ 驗證 cell**(以 assertion 鎖住關鍵數值)、章末練習;另有同源的純 Python 腳本版
+  (`python/NN-主題/main.py`,由 notebook 以 `nbconvert` 轉出)。
+- **共用函式庫 `common/`**(「ModelQ-lite」,`jupyter/common/` 與 `python/common/` 內容相同):
+  逐樣本模擬器 + DSA + 解析工具。
 - **C/C++ 平行版本**(`cpp/`):19 章各一支 C++17 程式,header-only 函式庫、零外部相依,
   實驗與驗證條件與 notebook 一一對應(見 `cpp/README.md`)。
 - **ESP32 韌體**(`hardware/esp32/`):第 19 章 RCP 實機平台,PID 邏輯已在 host 端
@@ -120,9 +122,10 @@ LTI(python-control)用於解析 Bode/邊限,與逐樣本模擬**交叉驗證**(�
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -r python/requirements.txt
-./tools/run_all_labs.sh          # 全部:19 份 notebook + 韌體 host 測試 + C++ 版
-./python/run_all.sh              # 只跑 Python 版
+pip install -r jupyter/requirements.txt   # 或 python/requirements.txt(純腳本版,精簡)
+./tools/run_all_labs.sh          # 全部:Jupyter 19 章 + 純腳本 19 章 + 韌體 host 測試 + C++ 版
+./jupyter/run_all.sh             # 只跑 Jupyter notebook 版
+./python/run_all.sh              # 只跑純 Python 腳本版
 ./cpp/run_all.sh                 # 只跑 C++ 版(只需 C++17 編譯器)
 ```
 

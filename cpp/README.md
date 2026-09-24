@@ -1,6 +1,6 @@
 # Control System Design Guide — C/C++ 實驗教材
 
-Python 版([`../python/`](../python/README.md) 各章 `lab.ipynb`)的 **C++17 平行版本**:
+Python 版([`../jupyter/`](../jupyter/README.md) 各章 `lab.ipynb`,或 [`../python/`](../python/README.md) 各章 `main.py`)的 **C++17 平行版本**:
 19 章各一支可執行程式,重現相同實驗、輸出相同數值表,並以相同的 **✅ 驗證條件** 自我檢查。
 
 - **零外部相依**:只用 C++17 標準函式庫(header-only 共用函式庫 `common/`),

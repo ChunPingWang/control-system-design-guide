@@ -1,26 +1,24 @@
 #!/usr/bin/env bash
-# 執行全部 19 章 lab notebook;任一章的 ✅ 驗證 assertion 失敗即回報非零結束碼。
-# 預設不改寫 notebook(輸出到暫存檔);要把執行結果寫回 notebook 請設 INPLACE=1。
+# 執行全部 19 章純 Python 腳本(main.py);任一章末的 ✅ assertion 失敗即回報非零結束碼。
+# 無頭執行:預設 MPLBACKEND=Agg,不開圖形視窗(plt.show() 變為 no-op)。
 set -u
 cd "$(dirname "$0")"
-JUPYTER="${JUPYTER:-../.venv/bin/jupyter}"
-[ -x "$JUPYTER" ] || JUPYTER=jupyter
+ROOT="$PWD"
+PYTHON="${PYTHON:-$ROOT/../.venv/bin/python}"
+[ -x "$PYTHON" ] || PYTHON="$(command -v python3)"
+export MPLBACKEND="${MPLBACKEND:-Agg}"
 LOGDIR="${TMPDIR:-/tmp}"
 
 fail=0
 for d in [01][0-9]-*/; do
     d="${d%/}"
-    [ -f "$d/lab.ipynb" ] || continue
+    [ -f "$d/main.py" ] || continue
     printf '%-32s ' "$d"
-    if [ "${INPLACE:-0}" = 1 ]; then
-        out=(--inplace)
-    else
-        out=(--output-dir "$LOGDIR" --output "lab_$d.ipynb")
-    fi
-    if "$JUPYTER" nbconvert --to notebook --execute "${out[@]}" "$d/lab.ipynb" >/dev/null 2>"$LOGDIR/lab_$d.log"; then
+    # 從章目錄內執行,讓腳本裡的 sys.path.append('..') 指到 python/,找得到 common/
+    if ( cd "$d" && "$PYTHON" main.py ) >"$LOGDIR/pyscript_$d.log" 2>&1; then
         echo "OK"
     else
-        echo "FAIL  (log: $LOGDIR/lab_$d.log)"
+        echo "FAIL  (log: $LOGDIR/pyscript_$d.log)"
         fail=1
     fi
 done

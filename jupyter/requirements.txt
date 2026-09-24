@@ -3,4 +3,6 @@ scipy
 matplotlib
 pandas
 control
+jupyterlab
+ipywidgets
 pyserial
