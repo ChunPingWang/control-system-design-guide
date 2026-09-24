@@ -5,7 +5,7 @@
 | 原書 | George Ellis, *Control System Design Guide: Using Your Computer to Understand and Diagnose Feedback Controllers*, 4th ed. (2012) |
 | 文件版本 | v2(2026-09-24) |
 | 狀態 | **已實作並完成程式碼驗證** —— 19 章 Jupyter 實驗全數可執行,每章附自動化驗證(assertion) |
-| 實作位置 | repo 根目錄(`01-…`~`19-…` 各章、`common/`、`hardware/`) |
+| 實作位置 | Python 版 `python/`(`01-…`~`19-…` 各章、`common/`);C/C++ 版 `cpp/`(對稱結構);韌體 `hardware/` |
 | 前版計劃 | `control-system-design-guide-software-replacement-plan-v1.md`(規劃草案,本文件取代之) |
 
 ---
@@ -15,9 +15,11 @@
 原書所有實驗依賴作者的 **Visual ModelQ**(僅限 Windows、已停止維護、專有格式)。
 本教材以開源工具重建全書 19 章的實驗環境:
 
-- **每章一份 Jupyter notebook**(`NN-主題/lab.ipynb`),含:理論重點、可執行實驗、
+- **每章一份 Jupyter notebook**(`python/NN-主題/lab.ipynb`),含:理論重點、可執行實驗、
   **✅ 驗證 cell**(以 assertion 鎖住關鍵數值)、章末練習。
-- **共用函式庫 `common/`**(「ModelQ-lite」):逐樣本模擬器 + DSA + 解析工具。
+- **共用函式庫 `python/common/`**(「ModelQ-lite」):逐樣本模擬器 + DSA + 解析工具。
+- **C/C++ 平行版本**(`cpp/`):19 章各一支 C++17 程式,header-only 函式庫、零外部相依,
+  實驗與驗證條件與 notebook 一一對應(見 `cpp/README.md`)。
 - **ESP32 韌體**(`hardware/esp32/`):第 19 章 RCP 實機平台,PID 邏輯已在 host 端
   與 Python 實作逐樣本比對驗證。
 
@@ -27,12 +29,12 @@
 
 | Visual ModelQ 功能 | 本教材替代 | 位置 |
 |---|---|---|
-| 方塊圖建模(拖拉) | 逐樣本模擬類別(`DiscretePID`、`MotorPlant`、`TwoMassPlant`…) | `common/sim.py` |
+| 方塊圖建模(拖拉) | 逐樣本模擬類別(`DiscretePID`、`MotorPlant`、`TwoMassPlant`…) | `python/common/sim.py` |
 | Live Scope 示波器 | Matplotlib(notebook 內嵌) | 各章 |
 | Live Constant 即時調參 | 參數掃描 + 自動指標表(可另加 ipywidgets 滑桿) | 各章 |
-| DSA 動態訊號分析儀 | chirp/PRBS 激發 + Welch 交叉頻譜 + coherence | `common/dsa.py` |
-| 解析 Bode / 邊限 | python-control(`margins`、`bode_compare`) | `common/control_helpers.py`、`common/plots.py` |
-| 馬達物理模型 | `DCMotorPlant`(含電氣動態)、`TwoMassPlant`(柔性) | `common/sim.py` |
+| DSA 動態訊號分析儀 | chirp/PRBS 激發 + Welch 交叉頻譜 + coherence | `python/common/dsa.py` |
+| 解析 Bode / 邊限 | python-control(`margins`、`bode_compare`) | `python/common/control_helpers.py`、`python/common/plots.py` |
+| 馬達物理模型 | `DCMotorPlant`(含電氣動態)、`TwoMassPlant`(柔性) | `python/common/sim.py` |
 | 商用 RCP 硬體 | ESP32 + TB6612 + 編碼器馬達;Python 負責辨識/設計/分析 | `hardware/esp32/` |
 
 **核心架構決策(與 v1 相同,已實證有效)**:採固定步長逐樣本模擬,而非只靠 LTI 工具
@@ -111,14 +113,17 @@ LTI(python-control)用於解析 Bode/邊限,與逐樣本模擬**交叉驗證**(�
 | 19 份 notebook 全量執行 | **19/19 通過**(`jupyter nbconvert --to notebook --execute`) |
 | 每章 assertion | 全數通過(各章「✅ 驗證通過」輸出保留在 notebook 內) |
 | 韌體 host 測試 | 通過(`hardware/esp32/test_host/`) |
+| C++ 版 19 章(`cpp/`) | **19/19 通過**(g++ 13 / clang++,`cpp/run_all.sh`);確定性章節數值與 notebook 逐位相同 |
 | `main.cpp`(Arduino 層) | 未編譯 —— 需 PlatformIO + ESP32 toolchain;控制邏輯(pid.h)已 host 驗證 |
 
 重跑全部驗證:
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-./tools/run_all_labs.sh          # 執行 19 份 notebook(任一 assert 失敗即中止)
+pip install -r python/requirements.txt
+./tools/run_all_labs.sh          # 全部:19 份 notebook + 韌體 host 測試 + C++ 版
+./python/run_all.sh              # 只跑 Python 版
+./cpp/run_all.sh                 # 只跑 C++ 版(只需 C++17 編譯器)
 ```
 
 ## 6. 與原書的已知差異
