@@ -57,18 +57,30 @@ tools/run_all_labs.sh    全部驗證(兩版 + 韌體)
 
 ## 章節一覽
 
-| 章 | 主題 | 章 | 主題 |
+每章資料夾內都有 `README.md`:Python 版為完整章節說明(理論、實驗設計、結果、驗證條件、練習),
+C++ 版為程式導讀(程式結構、Python↔C++ 對照、CSV 輸出、實際執行結果)。
+
+| 章 | 主題 | Python 說明 | C++ 說明 |
 |---|---|---|---|
-| 01 | 回授導論 | 11 | 建模入門(DC 馬達) |
-| 02 | 頻域分析 + DSA | 12 | 非線性(windup/摩擦/背隙) |
-| 03 | zone-based 調機 | 13 | 模型驗證(量測 vs 模型) |
-| 04 | 取樣與延遲 | 14 | 編碼器與量化雜訊 |
-| 05 | z 域與離散化 | 15 | 伺服馬達與電流迴路 |
-| 06 | P/PI/PID/PID+ | 16 | 機構柔性與共振 |
-| 07 | 擾動響應與解耦 | 17 | 位置迴路(串級 vs PID) |
-| 08 | 前饋 | 18 | 運動控制觀測器 |
-| 09 | 迴路內濾波器 | 19 | RCP(ESP32) |
-| 10 | Luenberger 觀測器 | | |
+| 01 | 回授導論 | [README](python/01-introduction/README.md) · [notebook](python/01-introduction/lab.ipynb) | [README](cpp/01-introduction/README.md) · [main.cpp](cpp/01-introduction/main.cpp) |
+| 02 | 頻域分析 + DSA | [README](python/02-frequency-domain/README.md) · [notebook](python/02-frequency-domain/lab.ipynb) | [README](cpp/02-frequency-domain/README.md) · [main.cpp](cpp/02-frequency-domain/main.cpp) |
+| 03 | zone-based 調機 | [README](python/03-tuning/README.md) · [notebook](python/03-tuning/lab.ipynb) | [README](cpp/03-tuning/README.md) · [main.cpp](cpp/03-tuning/main.cpp) |
+| 04 | 取樣與延遲 | [README](python/04-sampling-delay/README.md) · [notebook](python/04-sampling-delay/lab.ipynb) | [README](cpp/04-sampling-delay/README.md) · [main.cpp](cpp/04-sampling-delay/main.cpp) |
+| 05 | z 域與離散化 | [README](python/05-z-domain/README.md) · [notebook](python/05-z-domain/lab.ipynb) | [README](cpp/05-z-domain/README.md) · [main.cpp](cpp/05-z-domain/main.cpp) |
+| 06 | P/PI/PID/PID+ | [README](python/06-controllers/README.md) · [notebook](python/06-controllers/lab.ipynb) | [README](cpp/06-controllers/README.md) · [main.cpp](cpp/06-controllers/main.cpp) |
+| 07 | 擾動響應與解耦 | [README](python/07-disturbance/README.md) · [notebook](python/07-disturbance/lab.ipynb) | [README](cpp/07-disturbance/README.md) · [main.cpp](cpp/07-disturbance/main.cpp) |
+| 08 | 前饋 | [README](python/08-feedforward/README.md) · [notebook](python/08-feedforward/lab.ipynb) | [README](cpp/08-feedforward/README.md) · [main.cpp](cpp/08-feedforward/main.cpp) |
+| 09 | 迴路內濾波器 | [README](python/09-filters/README.md) · [notebook](python/09-filters/lab.ipynb) | [README](cpp/09-filters/README.md) · [main.cpp](cpp/09-filters/main.cpp) |
+| 10 | Luenberger 觀測器 | [README](python/10-observers/README.md) · [notebook](python/10-observers/lab.ipynb) | [README](cpp/10-observers/README.md) · [main.cpp](cpp/10-observers/main.cpp) |
+| 11 | 建模入門(DC 馬達) | [README](python/11-modeling/README.md) · [notebook](python/11-modeling/lab.ipynb) | [README](cpp/11-modeling/README.md) · [main.cpp](cpp/11-modeling/main.cpp) |
+| 12 | 非線性(windup/摩擦/背隙) | [README](python/12-nonlinear/README.md) · [notebook](python/12-nonlinear/lab.ipynb) | [README](cpp/12-nonlinear/README.md) · [main.cpp](cpp/12-nonlinear/main.cpp) |
+| 13 | 模型驗證(量測 vs 模型) | [README](python/13-model-verification/README.md) · [notebook](python/13-model-verification/lab.ipynb) | [README](cpp/13-model-verification/README.md) · [main.cpp](cpp/13-model-verification/main.cpp) |
+| 14 | 編碼器與量化雜訊 | [README](python/14-encoder/README.md) · [notebook](python/14-encoder/lab.ipynb) | [README](cpp/14-encoder/README.md) · [main.cpp](cpp/14-encoder/main.cpp) |
+| 15 | 伺服馬達與電流迴路 | [README](python/15-servo-motor/README.md) · [notebook](python/15-servo-motor/lab.ipynb) | [README](cpp/15-servo-motor/README.md) · [main.cpp](cpp/15-servo-motor/main.cpp) |
+| 16 | 機構柔性與共振 | [README](python/16-resonance/README.md) · [notebook](python/16-resonance/lab.ipynb) | [README](cpp/16-resonance/README.md) · [main.cpp](cpp/16-resonance/main.cpp) |
+| 17 | 位置迴路(串級 vs PID) | [README](python/17-position-control/README.md) · [notebook](python/17-position-control/lab.ipynb) | [README](cpp/17-position-control/README.md) · [main.cpp](cpp/17-position-control/main.cpp) |
+| 18 | 運動控制觀測器 | [README](python/18-motion-observer/README.md) · [notebook](python/18-motion-observer/lab.ipynb) | [README](cpp/18-motion-observer/README.md) · [main.cpp](cpp/18-motion-observer/main.cpp) |
+| 19 | RCP(ESP32) | [README](python/19-rapid-control-prototyping/README.md) · [notebook](python/19-rapid-control-prototyping/lab.ipynb) | [README](cpp/19-rapid-control-prototyping/README.md) · [main.cpp](cpp/19-rapid-control-prototyping/main.cpp) |
 
 - Python 版每章:理論重點 → 實驗(圖 + 數值表)→ **✅ 驗證 cell(assertion)** → 練習。
 - C++ 版每章:實驗(數值表 + CSV)→ **✅ 驗證(CHECK)** → 以結束碼回報。

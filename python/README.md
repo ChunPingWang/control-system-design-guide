@@ -31,7 +31,7 @@ python/
 │   │                        TwoMassPlant、Backlash、EncoderModel、Delay…
 │   ├── dsa.py               DSA:chirp/PRBS 激發 + Welch 交叉頻譜 FRF 量測
 │   └── plots.py             Bode 疊圖(解析系統與量測 FRF 同圖)
-├── 01-introduction/ … 19-rapid-control-prototyping/    每章一份 lab.ipynb
+├── 01-introduction/ … 19-rapid-control-prototyping/    每章 lab.ipynb + README.md(章節詳細說明)
 ├── requirements.txt
 └── run_all.sh
 ```

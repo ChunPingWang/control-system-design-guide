@@ -54,7 +54,7 @@ cpp/
 │   │                                                                ← python/common/sim.py
 │   ├── dsa.hpp               FFT、chirp/PRBS、Welch 交叉頻譜 FRF    ← python/common/dsa.py
 │   └── util.hpp              陣列、統計、step_metrics、CSV、Checker ← python/common/control_helpers.py
-├── 01-introduction/main.cpp  …  19-rapid-control-prototyping/main.cpp
+├── 01-introduction/ … 19-rapid-control-prototyping/   每章 main.cpp + README.md(程式導讀)
 ├── tools/plot_csv.py       CSV → 圖(選用)
 ├── CMakeLists.txt          每章一個執行檔 ch01…ch19,並註冊為 ctest
 └── run_all.sh              一鍵建置 + 驗證(無 cmake 時退回直接編譯)
