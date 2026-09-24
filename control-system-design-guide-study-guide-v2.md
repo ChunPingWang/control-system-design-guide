@@ -5,7 +5,7 @@
 | 原書 | George Ellis, *Control System Design Guide: Using Your Computer to Understand and Diagnose Feedback Controllers*, 4th ed. (2012) |
 | 文件版本 | v2(2026-09-24) |
 | 狀態 | **已實作並完成程式碼驗證** —— 19 章 Jupyter 實驗全數可執行,每章附自動化驗證(assertion) |
-| 實作位置 | `control-system-design-guide-python/` |
+| 實作位置 | repo 根目錄(`01-…`~`19-…` 各章、`common/`、`hardware/`) |
 | 前版計劃 | `control-system-design-guide-software-replacement-plan-v1.md`(規劃草案,本文件取代之) |
 
 ---
@@ -116,7 +116,6 @@ LTI(python-control)用於解析 Bode/邊限,與逐樣本模擬**交叉驗證**(�
 重跑全部驗證:
 
 ```bash
-cd control-system-design-guide-python
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ./tools/run_all_labs.sh          # 執行 19 份 notebook(任一 assert 失敗即中止)
