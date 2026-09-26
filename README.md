@@ -2,17 +2,19 @@
 
 George Ellis《Control System Design Guide》(4th ed.) 的現代化開源實驗環境:
 以開源軟體取代原書的 Visual ModelQ,以 **ESP32** 取代商用 RCP 硬體。
-全書 19 章,提供 **三個對稱版本**(Jupyter / 純 Python 腳本 / C++),章節目錄一一對應、
-實驗參數與 ✅ 驗證條件相同。
+全書 19 章,提供 **四個對稱版本**(Jupyter / 純 Python 腳本 / C++ / Maker 硬體),章節目錄
+一一對應、實驗參數與 ✅ 驗證條件相同。
 
 | 版本 | 路徑 | 技術 | 執行 | 說明 |
 |---|---|---|---|---|
 | Jupyter | [`jupyter/`](jupyter/README.md) | Jupyter + python-control + SciPy | `jupyter/run_all.sh` | 每章一份 `lab.ipynb`,圖表內嵌,適合互動學習 |
 | Python 腳本 | [`python/`](python/README.md) | 純 `.py` + python-control + SciPy | `python/run_all.sh` | 每章一支 `main.py`,可直接 `python main.py`,適合命令列 / CI |
 | C/C++ | [`cpp/`](cpp/README.md) | C++17,header-only,零外部相依 | `cpp/run_all.sh` | 每章一支 `main.cpp`,輸出 CSV,貼近嵌入式 / 韌體 |
+| Maker 硬體 | [`maker-labs/`](maker-labs/README.md) | Python sim + ESP32 韌體 + lab report | `maker-labs/run_all.sh` | 每章 = 模擬 + ESP32 sketch + 工程報告,走「模擬→實機」Maker 路線 |
 
 > Jupyter 版與 Python 腳本版是**同一套實驗的兩種呈現**:`python/*/main.py` 由
 > `jupyter/*/lab.ipynb` 以 `nbconvert --to script` 轉出,程式碼與驗證條件完全相同。
+> Maker 版另循兩份 Maker 教材(見 repo 根的 `maker-*.md`),把模擬接到 ESP32 實作與 lab report。
 
 > 總覽、章節對照與驗證報告見
 > [`control-system-design-guide-study-guide-v2.md`](control-system-design-guide-study-guide-v2.md)。
@@ -25,7 +27,9 @@ George Ellis《Control System Design Guide》(4th ed.) 的現代化開源實驗�
 | Python 腳本版 | Python ≥ 3.11 + `python/requirements.txt` 套件 | 精簡版(不含 jupyterlab);見 [`python/requirements.txt`](python/requirements.txt) |
 | C/C++ 版 | 任一 C++17 編譯器(g++ / clang++ / MSVC) | header-only,無 Eigen / Boost / FFTW 等外部相依 |
 | C++ 一鍵驗證 | CMake ≥ 3.16(選用) | 無 CMake 時 `cpp/run_all.sh` 會退回直接以 `$CXX` 編譯 |
-| 第 19 章韌體 | PlatformIO + ESP32(選用) | host 端 PID 等價性測試只需 C++ 編譯器,不需實機 |
+| Maker 版 sim | Python ≥ 3.11(同 `python/requirements.txt`) | `maker-labs/run_all.sh`,無頭 Agg 執行 |
+| Maker 版韌體驗證 | C++17 編譯器 | host 編譯 + 控制邏輯單元測試,不需實機(`maker-labs/verify_firmware.sh`) |
+| 韌體上機(選用) | PlatformIO + ESP32 + 馬達/encoder/IMU | host 端測試不需實機;真實量測填入各章 `LAB_REPORT.md` |
 
 > 三版彼此獨立,任選一版即可;只想跑 C++ 版時不需要安裝任何 Python 套件
 > (畫圖用的 `tools/plot_csv.py` 除外)。
@@ -61,9 +65,10 @@ python python/03-tuning/main.py                      # 單跑一章(可從任意
 > CXX=g++-15 ./tools/run_all_labs.sh
 > ```
 
-驗證涵蓋 **58 個程式單元**:19 章 Jupyter notebook(nbconvert 執行章末 ✅ assertion)、
+驗證涵蓋四棵樹:19 章 Jupyter notebook(nbconvert 執行章末 ✅ assertion)、
 19 章純 Python 腳本(直接執行同一組 assertion)、19 章 C++(ctest,`-Wall -Wextra` 零警告)、
-以及 1 個韌體 host PID 等價性測試(`pid.h` 對比 Python 重現,逐樣本最大差異約 3e-5)。
+1 個韌體 host PID 等價性測試(`pid.h` 對比 Python 重現,逐樣本最大差異約 3e-5)、
+以及 Maker 版 19 章 sim(章末 assertion)+ 共用韌體 lib 單元測試(25 項)+ 19 章 firmware host 編譯。
 任一失敗腳本即以非零結束碼回報。
 
 ## 疑難排解
@@ -98,12 +103,21 @@ cpp/                     C/C++ 版(與 python/ 對稱)
 ├── CMakeLists.txt
 └── run_all.sh             建置 + 執行 19 章驗證
 
+maker-labs/              Maker 硬體版(第 4 棵樹,sim + ESP32 韌體 + lab report)
+├── common/makerlab.py     模擬小工具(step metrics、無頭存圖)
+├── firmware/lib/          共用控制 lib(pid/filter/encoder/feedforward/observer/util/fusion,host 可測)
+├── firmware/test/         lib 的 host 單元測試
+├── firmware/arduino_shim.h  host 端 Arduino/ESP32 API mock
+├── 01-introduction/ … 19-rapid-control-prototyping/   每章 sim.py + firmware/main.cpp + LAB_REPORT.md
+├── run_all.sh             執行 19 章 sim 驗證
+└── verify_firmware.sh     lib 單元測試 + 各章 firmware host 編譯
+
 hardware/esp32/          第 19 章 RCP 韌體(PlatformIO,各版共用)
 ├── src/pid.h              PID 邏輯(純 C++,host 可測)
 ├── src/main.cpp           編碼器 ISR、TB6612 PWM、序列命令與遙測
 └── test_host/             host 端 C/Python 逐樣本等價性測試
 
-tools/run_all_labs.sh    全部驗證(三版 + 韌體)
+tools/run_all_labs.sh    全部驗證(四版 + 韌體)
 ```
 
 ## 章節一覽
