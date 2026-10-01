@@ -16,6 +16,7 @@
 maker-labs/NN-主題/
 ├── sim.py            Python 模擬(python-control/scipy);可執行、章末 assert 自我驗證
 ├── firmware/main.cpp ESP32 sketch(Arduino);用共用控制 lib,可 host 編譯驗證
+├── platformio.ini    PlatformIO 設定;可直接 `pio run -t upload` 燒錄實機
 └── LAB_REPORT.md     工程 lab report 模板(Objective→…→Exit Criteria)
 ```
 
@@ -54,6 +55,22 @@ CXX=g++-15 ./maker-labs/verify_firmware.sh
 
 > 誠實聲明:`verify_firmware.sh` 驗證的是**編譯正確性與控制邏輯數值**,不是真實電機行為。
 > 真正的 rise time / overshoot / disturbance recovery 必須上機量測並填入 lab report。
+
+## 上機燒錄(PlatformIO)
+
+每章附一份 `platformio.ini`(`board=esp32dev`、`framework=arduino`),共用控制 lib
+以 include path 帶入(`../firmware/lib`),可直接在章節目錄燒錄實機、不需臨時專案:
+
+```bash
+cd maker-labs/06-controllers
+pio run -t upload            # build + 燒錄到 ESP32
+pio device monitor -b 115200 # 看遙測 CSV(格式見各章 main.cpp 頂部註解)
+```
+
+> 已於實機 **ESP32-D0WD(WROOM-32,CH340)** 逐章 `pio run` 建置通過(19/19,Flash ~21%);
+> `06-controllers` 另經實機燒錄 + 序列冒煙測試(100 Hz 迴路、9 欄 CSV)。
+> 腳位預設見各章 `firmware/main.cpp` 頂部與 [`../hardware/README.md`](../hardware/README.md);
+> 接線圖可對照兩套介面(Ch19 TB6612 全橋 / Maker DIR-PWM)。
 
 ## 硬體(BOM 摘要)
 
